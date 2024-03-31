@@ -1,0 +1,41 @@
+.terminal {
+    background-color: black;
+    color: lime;
+    font-family: monospace;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 400px;
+    height: 300px;
+}
+
+.content {
+    padding: 10px;
+    overflow-y: auto;
+    /* Add scrollbar when content exceeds height */
+}
+
+.input {
+    background: transparent;
+    border: none;
+    color: lime;
+    font-family: monospace;
+    outline: none;
+    width: calc(100% - 30px);
+}
+
+.prompt {
+    color: lime;
+}
+
+input:focus+.prompt {
+    outline: 1px solid lime;
+}
+
+pre {
+    white-space: pre-wrap;
+    /* Allow text to wrap */
+    word-wrap: break-word;
+    /* Break long words */
+    overflow-wrap: break-word;
+    /* Avoid overflowing of long words */
+}
