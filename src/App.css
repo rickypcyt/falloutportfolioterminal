@@ -12,10 +12,13 @@
 
 .canvas-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
+  
+  height: 326px;
+  width: 443px;
   pointer-events: none;
-  /* Para que el canvas no capture eventos del ratón */
+  border-radius: 17%;
+  /* Hace que el borde del canvas sea redondeado */
+
 }
 
 
@@ -41,4 +44,23 @@ img {
   .image-container {
     padding-bottom: 1%;
   }
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 95.9vh;
+  /* Establece la altura al 100% del viewport */
+  overflow: hidden;
+  /* Oculta el contenido que exceda el tamaño del contenedor */
+}
+
+.image-container img {
+  max-width: 100%;
+  /* Asegura que la imagen no exceda el ancho del contenedor */
+  max-height: 100%;
+  /* Asegura que la imagen no exceda la altura del contenedor */
+  vertical-align: middle;
+  /* Alinea verticalmente la imagen */
 }
