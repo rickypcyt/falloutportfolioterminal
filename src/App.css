@@ -1,0 +1,44 @@
+/* Estilo para el contenedor de la imagen */
+.image-container {
+  text-align: center;
+  background-color: #26272c;
+  padding-bottom: 2%;
+  /* Centra el contenido (la imagen) horizontalmente */
+}
+
+.image-container {
+  position: relative;
+}
+
+.canvas-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  /* Para que el canvas no capture eventos del ratón */
+}
+
+
+/* Estilo para la imagen */
+img {
+  max-width: 100%;
+  /* Ajusta el tamaño máximo de la imagen al contenedor */
+  height: auto;
+  /* Para mantener la proporción de aspecto de la imagen */
+  display: inline-block;
+  /* Asegura que la imagen se muestre como un bloque */
+}
+
+/* Estilo para el cuerpo HTML */
+.html {
+  background-color: #26272c;
+}
+
+/* Media query para pantallas pequeñas */
+@media only screen and (max-width: 600px) {
+
+  /* Reducir el padding del contenedor de la imagen */
+  .image-container {
+    padding-bottom: 1%;
+  }
+}
