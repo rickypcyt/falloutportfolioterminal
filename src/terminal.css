@@ -1,17 +1,19 @@
+/* terminal.css */
+
 .terminal {
-    background-color: #504e4f;
+    background-color: #151614;
     color: lime;
     font-family: monospace;
     border-radius: 8px;
     overflow: hidden;
-    width: 400px;
-    height: 300px;
+    width: 415px;
+    height: 315px;
 }
 
 .content {
     padding: 10px;
     overflow-y: auto;
-    /* Add scrollbar when content exceeds height */
+    /* Añadir barra de desplazamiento cuando el contenido excede la altura */
 }
 
 .input {
@@ -21,6 +23,7 @@
     font-family: monospace;
     outline: none;
     width: calc(100% - 30px);
+    /* Reducir el ancho del input para dejar espacio al prompt */
 }
 
 .prompt {
@@ -33,9 +36,9 @@ input:focus+.prompt {
 
 pre {
     white-space: pre-wrap;
-    /* Allow text to wrap */
+    /* Permitir que el texto se ajuste */
     word-wrap: break-word;
-    /* Break long words */
+    /* Romper palabras largas */
     overflow-wrap: break-word;
-    /* Avoid overflowing of long words */
+    /* Evitar que las palabras largas desborden */
 }
