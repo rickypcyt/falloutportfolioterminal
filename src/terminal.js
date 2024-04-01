@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './terminal.css';
+import './font.css'; // Importa el CSS donde definiste la fuente
+
 
 const Terminal = () => {
   const [inputValue, setInputValue] = useState('');
@@ -91,9 +93,11 @@ const Terminal = () => {
     <div className="terminal" style={{ 
       backgroundColor: "#151614",
       color: "lime",
-      fontFamily: "monospace",
+      fontFamily: "FSEX300", // Aquí se cambió a Fixedsys
       borderRadius: "8px",
       overflow: "hidden",
+                      fontSize: "",
+
       width: "415px",
       height: "315px"
     }}>
@@ -119,8 +123,9 @@ const Terminal = () => {
                 background: "transparent",
                 border: "none",
                 color: "lime",
-                fontFamily: "monospace",
+                fontFamily: "FSEX300", // También aquí
                 outline: "none",
+                fontSize: "large",
                 width: "calc(100% - 30px)"
               }}
               autoFocus
