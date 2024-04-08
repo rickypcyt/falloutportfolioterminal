@@ -90,17 +90,7 @@ const Terminal = () => {
   };
 
   return (
-    <div className="terminal" style={{ 
-      backgroundColor: "#151614",
-      color: "lime",
-      fontFamily: "FSEX300", // Aquí se cambió a Fixedsys
-      borderRadius: "8px",
-      overflow: "hidden",
-                      fontSize: "",
-
-      width: "415px",
-      height: "315px"
-    }}>
+    <div className="terminal">
       <div className="content" style={{
         padding: "10px",
         overflowY: "auto"
