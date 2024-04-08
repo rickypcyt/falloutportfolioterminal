@@ -1,5 +1,5 @@
 import React from 'react';
-import terminalImage from './bg3nobgblscgrennlght.png'; // Importa la imagen aquí
+import terminalImage from './bg3nobgblsc.png'; // Importa la imagen aquí
 import Terminal from './terminal';
 
 const ImageComponent = () => {
