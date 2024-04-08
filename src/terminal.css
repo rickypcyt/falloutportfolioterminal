@@ -66,9 +66,10 @@ pre {
         /* Limitar el ancho máximo al 90% del ancho de la ventana */
         max-height: 30vw;
         /* Permitir que la altura se ajuste automáticamente */
-        font-size: small;
+        font-size: x-small;
         /* Reducir el tamaño de fuente para pantallas más pequeñas */
         top: 45%;
         left: 41.5%;
     }
+    
 }
