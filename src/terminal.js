@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./terminal.css"; // Importa estilos específicos para el terminal
-import "./font.css"; // Importa el CSS donde definiste la fuente
+import "./font.css"; // Importa el CSS donde esta la fuente
 
 const Terminal = () => {
+  // Estados para manejar la entrada y salida del terminal
   const [inputValue, setInputValue] = useState("");
   const [outputBeforeRobco, setOutputBeforeRobco] = useState("");
   const [outputAfterRobco, setOutputAfterRobco] = useState("");
@@ -12,6 +13,7 @@ const Terminal = () => {
   const [showInput, setShowInput] = useState(false);
   const [showRobcoSystemMessage, setShowRobcoSystemMessage] = useState(false);
 
+  // Mensajes a mostrar antes de la animación de RobCo
   const messagesBeforeRobco = [
     "Initializing boot...",
     "Loading RobCo Unified OS...",
@@ -19,6 +21,7 @@ const Terminal = () => {
     "Launching Interface...",
   ];
 
+  // Arte ASCII de RobCo
   const robcoAsciiArt = [
     "   _____       _      _____                   ",
     "  |  __ \\     | |    / ____|                  ",
@@ -29,23 +32,27 @@ const Terminal = () => {
     " ",
   ];
 
+  // Mensajes a mostrar después de la animación de RobCo
   const messagesAfterRobco = [
     "==============================================",
     "Personal Terminal 'Proto-Boy' Manufactured by RobCo",
     "Type start to continue:",
   ];
 
+  // Mensaje del sistema de RobCo
   const robcoSystemMessage = `
 ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM
 COPYRIGHT 2075-2077 ROBCO INDUSTRIES
 -Server 1-
 `;
 
+  // Mensaje después del sistema de RobCo
   const MessageAfterRobcoSystem = `
 Personal Terminal -Proto-Boy- Manufactured by RobCo
 _______________________________________
 `;
 
+  // Menú de opciones
   const Menu = `
   What would you like to do?
   1) View Journal Entries
@@ -53,6 +60,7 @@ _______________________________________
   3) Delete last Journal Entry
     `;
 
+  // Función para limpiar la pantalla del terminal
   const clearHomeScreen = () => {
     setOutputAfterRobco("");
     setShowRobcoSystemMessage(false);
@@ -60,6 +68,7 @@ _______________________________________
   };
 
   useEffect(() => {
+    // Efecto para simular la animación de escritura
     const typingTimer = setInterval(() => {
       if (messageIndex < messagesBeforeRobco.length) {
         const currentMessage = messagesBeforeRobco[messageIndex];
@@ -111,10 +120,12 @@ _______________________________________
     showRobcoAscii,
   ]);
 
+  // Manejar el cambio en la entrada del usuario
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
 
+  // Manejar el envío de la entrada del usuario
   const handleInputSubmit = (event) => {
     event.preventDefault();
     if (inputValue.trim() === "start") {
