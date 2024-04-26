@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import "./terminal.css"; // Importa estilos específicos para el terminal
-import "./font.css"; // Importa el CSS donde esta la fuente
+import "./font.css"; // Importa el CSS donde está la fuente
+import Mensajes from "./Mensajes.js"; // Importa el componente Mensajes
+
 
 const Terminal = () => {
   // Estados para manejar la entrada y salida del terminal
@@ -12,53 +14,20 @@ const Terminal = () => {
   const [showRobcoAscii, setShowRobcoAscii] = useState(false);
   const [showInput, setShowInput] = useState(false);
   const [showRobcoSystemMessage, setShowRobcoSystemMessage] = useState(false);
+  const [inputHistory, setInputHistory] = useState([]);
 
+  const {
+    messagesBeforeRobco,
+    robcoAsciiArt,
+    messagesAfterRobco,
+    robcoSystemMessage,
+    MessageAfterRobcoSystem,
+    Menu,
+    ViewJournalEntries,
+    LogJournalEntries
+  } = Mensajes(); // Extrae los mensajes del componente Mensajes
   // Mensajes a mostrar antes de la animación de RobCo
-  const messagesBeforeRobco = [
-    "Initializing boot...",
-    "Loading RobCo Unified OS...",
-    "64K RAM detected...",
-    "Launching Interface...",
-  ];
-
-  // Arte ASCII de RobCo
-  const robcoAsciiArt = [
-    "   _____       _      _____                   ",
-    "  |  __ \\     | |    / ____|                  ",
-    "  | |__) |___ | |__ | |      ___               ",
-    "  |  _  // _ \\| '_ \\| |     / _ \\              ",
-    "  | | \\ \\ (_) | |_) | |____| (_) |             ",
-    "  |_|  \\_\\___/|___./ \\_____|\\___/          ",
-    " ",
-  ];
-
-  // Mensajes a mostrar después de la animación de RobCo
-  const messagesAfterRobco = [
-    "==============================================",
-    "Personal Terminal 'Proto-Boy' Manufactured by RobCo",
-    "Type start to continue:",
-  ];
-
-  // Mensaje del sistema de RobCo
-  const robcoSystemMessage = `
-ROBCO INDUSTRIES UNIFIED OPERATING SYSTEM
-COPYRIGHT 2075-2077 ROBCO INDUSTRIES
--Server 1-
-`;
-
-  // Mensaje después del sistema de RobCo
-  const MessageAfterRobcoSystem = `
-Personal Terminal -Proto-Boy- Manufactured by RobCo
-_______________________________________
-`;
-
-  // Menú de opciones
-  const Menu = `
-  What would you like to do?
-  1) View Journal Entries
-  2) Log a Journal Entry
-  3) Delete last Journal Entry
-    `;
+  
 
   // Función para limpiar la pantalla del terminal
   const clearHomeScreen = () => {
@@ -122,28 +91,32 @@ _______________________________________
 
   // Manejar el cambio en la entrada del usuario
   const handleInputChange = (event) => {
-    setInputValue(event.target.value);
+      setInputValue(event.target.value);
   };
 
   // Manejar el envío de la entrada del usuario
   const handleInputSubmit = (event) => {
     event.preventDefault();
-    if (inputValue.trim() === "start") {
+    setInputHistory([...inputHistory, inputValue.trim()]); // Guardar la entrada en el historial
+    if (inputValue.trim() === "start" || inputValue.trim() === "back") {
       setOutputAfterRobco("");
       setShowRobcoAscii(false);
       setShowRobcoSystemMessage(true);
       setInputValue("");
     } else if (inputValue.trim() === "1") {
       clearHomeScreen();
-      setOutputAfterRobco("Option 1 selected. Doing something...\n");
+      setOutputAfterRobco(ViewJournalEntries);
+      setShowInput(true);
       setInputValue("");
     } else if (inputValue.trim() === "2") {
       clearHomeScreen();
-      setOutputAfterRobco("Option 2 selected. Doing something else...\n");
+      setOutputAfterRobco(LogJournalEntries);
+      setShowInput(true);
       setInputValue("");
     } else if (inputValue.trim() === "3") {
       clearHomeScreen();
       setOutputAfterRobco("Option 3 selected. Doing something different...\n");
+      setShowInput(true);
       setInputValue("");
     } else {
       setOutputAfterRobco(
