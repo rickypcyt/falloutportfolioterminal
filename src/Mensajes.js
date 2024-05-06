@@ -48,14 +48,20 @@ _______________________________________
   3) Delete last Journal Entry
     `;
 
-  const ViewJournalEntries = `
-Welcome to the Journal Entries View
-Type back to go to the home menu`;
-    
-    const LogJournalEntries = `
-Welcome to your Journal Entries
-You can log your own journal here
-Type back to go to the home menu`;
+  const ViewJournalEntries = `Info: Type back to go to the home menu
+  
+Here are your Journal Entries
+`;
+
+  const LogJournalEntries = `Info: Type back to go to the home menu
+
+Here you can log your entries. Type anything and press enter to save
+`;
+  
+  const DeleteEntries=`Info: Type back to go to the home menu
+
+Here you can delete your entries
+`;
 
   return {
     messagesBeforeRobco,
@@ -64,8 +70,9 @@ Type back to go to the home menu`;
     robcoSystemMessage,
     MessageAfterRobcoSystem,
     Menu,
-      ViewJournalEntries,
+    ViewJournalEntries,
     LogJournalEntries,
+    DeleteEntries,
   };
 };
 

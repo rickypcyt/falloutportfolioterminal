@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import "./terminal.css"; // Importa estilos específicos para el terminal
-import "./font.css"; // Importa el CSS donde está la fuente
-import Mensajes from "./Mensajes.js"; // Importa el componente Mensajes
-
+import "./terminal.css";
+import "./font.css";
+import Mensajes from "./Mensajes.js";
 
 const Terminal = () => {
-  // Estados para manejar la entrada y salida del terminal
   const [inputValue, setInputValue] = useState("");
   const [outputBeforeRobco, setOutputBeforeRobco] = useState("");
   const [outputAfterRobco, setOutputAfterRobco] = useState("");
@@ -15,6 +13,8 @@ const Terminal = () => {
   const [showInput, setShowInput] = useState(false);
   const [showRobcoSystemMessage, setShowRobcoSystemMessage] = useState(false);
   const [inputHistory, setInputHistory] = useState([]);
+  const [journalEntries, setJournalEntries] = useState([]);
+  const [loggingMode, setLoggingMode] = useState(false);
 
   const {
     messagesBeforeRobco,
@@ -24,12 +24,10 @@ const Terminal = () => {
     MessageAfterRobcoSystem,
     Menu,
     ViewJournalEntries,
-    LogJournalEntries
-  } = Mensajes(); // Extrae los mensajes del componente Mensajes
-  // Mensajes a mostrar antes de la animación de RobCo
-  
+    LogJournalEntries,
+    DeleteEntries,
+  } = Mensajes();
 
-  // Función para limpiar la pantalla del terminal
   const clearHomeScreen = () => {
     setOutputAfterRobco("");
     setShowRobcoSystemMessage(false);
@@ -37,7 +35,6 @@ const Terminal = () => {
   };
 
   useEffect(() => {
-    // Efecto para simular la animación de escritura
     const typingTimer = setInterval(() => {
       if (messageIndex < messagesBeforeRobco.length) {
         const currentMessage = messagesBeforeRobco[messageIndex];
@@ -89,42 +86,107 @@ const Terminal = () => {
     showRobcoAscii,
   ]);
 
-  // Manejar el cambio en la entrada del usuario
   const handleInputChange = (event) => {
-      setInputValue(event.target.value);
+    setInputValue(event.target.value);
   };
 
-  // Manejar el envío de la entrada del usuario
   const handleInputSubmit = (event) => {
-    event.preventDefault();
-    setInputHistory([...inputHistory, inputValue.trim()]); // Guardar la entrada en el historial
-    if (inputValue.trim() === "start" || inputValue.trim() === "back") {
-      setOutputAfterRobco("");
-      setShowRobcoAscii(false);
-      setShowRobcoSystemMessage(true);
-      setInputValue("");
-    } else if (inputValue.trim() === "1") {
-      clearHomeScreen();
-      setOutputAfterRobco(ViewJournalEntries);
-      setShowInput(true);
-      setInputValue("");
-    } else if (inputValue.trim() === "2") {
-      clearHomeScreen();
-      setOutputAfterRobco(LogJournalEntries);
-      setShowInput(true);
-      setInputValue("");
-    } else if (inputValue.trim() === "3") {
-      clearHomeScreen();
-      setOutputAfterRobco("Option 3 selected. Doing something different...\n");
-      setShowInput(true);
-      setInputValue("");
-    } else {
+  event.preventDefault();
+  setInputHistory([...inputHistory, inputValue.trim()]);
+  if (inputValue.trim() === "start" || inputValue.trim() === "back") {
+    setOutputAfterRobco("");
+    setShowRobcoAscii(false);
+    setShowRobcoSystemMessage(true);
+    setInputValue("");
+  } else if (inputValue.trim() === "1") {
+    clearHomeScreen();
+    if (journalEntries.length > 0) {
+      setOutputAfterRobco("Select entry number to view:\n");
       setOutputAfterRobco(
-        (prevOutput) => prevOutput + `Command '${inputValue}' not recognized.\n`
+        journalEntries.map((entry, index) => `${index + 1}. ${entry}`).join("\n")
       );
-      setInputValue("");
+      setShowInput(true);
+    } else {
+      setOutputAfterRobco("No entries found.\n");
     }
+    setShowInput(true);
+    setLoggingMode(false);
+    setInputValue("");
+  } else if (inputValue.trim() === "2") {
+    clearHomeScreen();
+    setOutputAfterRobco(LogJournalEntries);
+    setShowInput(true);
+    setLoggingMode(true);
+    setInputValue("");
+  } else if (inputValue.trim() === "3") {
+    clearHomeScreen();
+    if (journalEntries.length > 0) {
+      setOutputAfterRobco("Select entry number to delete:\n");
+      setOutputAfterRobco(
+        journalEntries.map((entry, index) => `${index + 1}. ${entry}`).join("\n")
+      );
+      setShowInput(true);
+    } else {
+      setOutputAfterRobco("No entries found.\n");
+      setShowInput(true);
+          setInputValue("");
+
+
+    }
+    setInputValue("");
+  } else if (inputValue.trim().startsWith("delete ")) {
+    const entryIndex = parseInt(inputValue.trim().substring(7), 10) - 1;
+    handleDeleteEntry(entryIndex);
+    setInputValue("");
+  } else if (loggingMode) {
+    setJournalEntries([...journalEntries, inputValue]);
+    localStorage.setItem("journalEntries", JSON.stringify(journalEntries));
+    clearHomeScreen();
+    setOutputAfterRobco("Entry logged, you can now go back.\n");
+    setShowInput(true);
+    setInputValue("");
+  } else {
+    setOutputAfterRobco(
+      (prevOutput) => prevOutput + `Command '${inputValue}' not recognized.\n`
+    );
+    setInputValue("");
+  }
+};
+
+  const handleDeleteEntry = (entryIndex) => {
+    if (entryIndex >= 0 && entryIndex < journalEntries.length) {
+      const updatedEntries = [...journalEntries];
+      updatedEntries.splice(entryIndex, 1);
+      setJournalEntries(updatedEntries);
+      localStorage.setItem("journalEntries", JSON.stringify(updatedEntries));
+      clearHomeScreen();
+      setOutputAfterRobco(`Entry ${entryIndex + 1} deleted, you can now go back.\n`);
+      setInputValue("");
+
+    } else {
+      setOutputAfterRobco("Invalid entry number.\n");
+    }
+    setShowInput(true);
   };
+
+  const handleEntrySelection = (entryIndex) => {
+    if (entryIndex >= 0 && entryIndex < journalEntries.length) {
+      clearHomeScreen();
+      setOutputAfterRobco(
+        `Entry ${entryIndex + 1}:\n${journalEntries[entryIndex]}\n`
+      );
+    } else {
+      setOutputAfterRobco("Invalid entry number.\n");
+    }
+    setShowInput(false);
+  };
+
+  useEffect(() => {
+    const storedEntries = localStorage.getItem("journalEntries");
+    if (storedEntries) {
+      setJournalEntries(JSON.parse(storedEntries));
+    }
+  }, []);
 
   return (
     <div className="terminal">
