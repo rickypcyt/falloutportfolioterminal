@@ -2,11 +2,6 @@
 
 ![image](https://github.com/rickypcyt/falloutportfolioterminal/assets/105986682/da5b4496-3a6b-4018-b48b-a70acfe0567f)
 
-![image](https://github.com/rickypcyt/falloutportfolioterminal/assets/105986682/7dc86c6b-41f7-47a7-bf69-3e5d98d930a3)
-
-![image](https://github.com/rickypcyt/falloutportfolioterminal/assets/105986682/163410a0-4d6f-4c54-bd41-b845b35b2632)
-
-
 
 This is a React page that simulates a terminal interface. It displays messages and ASCII art sequentially to mimic the boot process of the Fallout Game Series terminal and provides an interactive menu for users to select options.
 
@@ -18,6 +13,12 @@ This is a React page that simulates a terminal interface. It displays messages a
 - Interactive menu with options for users to select.
 - Supports input commands and provides feedback accordingly sucha as errors.
 - Lets you log journal entries, view and delete them.
+
+## Showcase
+
+![image](https://github.com/rickypcyt/falloutportfolioterminal/assets/105986682/7dc86c6b-41f7-47a7-bf69-3e5d98d930a3)
+
+![image](https://github.com/rickypcyt/falloutportfolioterminal/assets/105986682/163410a0-4d6f-4c54-bd41-b845b35b2632)
 
 ## Acknowledgments
 Special thanks to fallout Games for the inspiration.
