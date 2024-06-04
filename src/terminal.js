@@ -3,6 +3,8 @@ import "./terminal.css";
 import "./font.css";
 import Mensajes from "./Mensajes.js";
 
+
+// Definir consts y useStates de todo lo necesario
 const Terminal = () => {
   const [inputValue, setInputValue] = useState("");
   const [outputBeforeRobco, setOutputBeforeRobco] = useState("");
@@ -125,18 +127,18 @@ const Terminal = () => {
       setOutputAfterRobco(
         journalEntries.map((entry, index) => `${index + 1}. ${entry}`).join("\n")
       );
-      setShowInput(true);
     } else {
       setOutputAfterRobco("No entries found.\n");
       setShowInput(true);
-          setInputValue("");
-
-
+      setInputValue("");
+      
+      
     }
     setInputValue("");
   } else if (inputValue.trim().startsWith("delete ")) {
     const entryIndex = parseInt(inputValue.trim().substring(7), 10) - 1;
     handleDeleteEntry(entryIndex);
+    setShowInput(true);
     setInputValue("");
   } else if (loggingMode) {
     setJournalEntries([...journalEntries, inputValue]);
