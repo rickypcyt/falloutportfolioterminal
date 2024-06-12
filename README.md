@@ -7,7 +7,7 @@ This is a React page that simulates a terminal interface. It displays messages a
 
 ## Features
 
-- Simulates a temrinal inside a PipBoy.
+- Simulates a terminal inside a PipBoy.
 - Shows a RobCo ASCII art at the beginning.
 - Sequential typing effect for message display.
 - Interactive menu with options for users to select.
