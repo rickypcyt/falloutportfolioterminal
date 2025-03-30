@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import "./terminal.css";
-import "./font.css";
+import "./styles/terminal.css";
+import "./styles/font.css";
 import Mensajes from "./Mensajes.js";
 
 
@@ -15,6 +15,7 @@ const Terminal = () => {
   const [showInput, setShowInput] = useState(false);
   const [showRobcoSystemMessage, setShowRobcoSystemMessage] = useState(false);
   const [inputHistory, setInputHistory] = useState([]);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const [journalEntries, setJournalEntries] = useState([]);
   const [loggingMode, setLoggingMode] = useState(false);
 
@@ -92,68 +93,127 @@ const Terminal = () => {
     setInputValue(event.target.value);
   };
 
-  const handleInputSubmit = (event) => {
-  event.preventDefault();
-  setInputHistory([...inputHistory, inputValue.trim()]);
-  if (inputValue.trim() === "start" || inputValue.trim() === "back") {
-    setOutputAfterRobco("");
-    setShowRobcoAscii(false);
-    setShowRobcoSystemMessage(true);
-    setInputValue("");
-  } else if (inputValue.trim() === "1") {
-    clearHomeScreen();
-    if (journalEntries.length > 0) {
-      setOutputAfterRobco("Select entry number to view:\n");
-      setOutputAfterRobco(
-        journalEntries.map((entry, index) => `${index + 1}. ${entry}`).join("\n")
-      );
-      setShowInput(true);
-    } else {
-      setOutputAfterRobco("No entries found.\n");
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (historyIndex < inputHistory.length - 1) {
+        const newIndex = historyIndex + 1;
+        setHistoryIndex(newIndex);
+        setInputValue(inputHistory[inputHistory.length - 1 - newIndex]);
+      }
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (historyIndex > 0) {
+        const newIndex = historyIndex - 1;
+        setHistoryIndex(newIndex);
+        setInputValue(inputHistory[inputHistory.length - 1 - newIndex]);
+      } else {
+        setHistoryIndex(-1);
+        setInputValue('');
+      }
+    } else if (event.key === 'Tab') {
+      event.preventDefault();
+      // Basic command autocomplete
+      const commands = ['start', 'back', 'help', 'clear', '1', '2', '3'];
+      const matches = commands.filter(cmd => cmd.startsWith(inputValue));
+      if (matches.length === 1) {
+        setInputValue(matches[0]);
+      }
     }
-    setShowInput(true);
-    setLoggingMode(false);
-    setInputValue("");
-  } else if (inputValue.trim() === "2") {
-    clearHomeScreen();
-    setOutputAfterRobco(LogJournalEntries);
-    setShowInput(true);
-    setLoggingMode(true);
-    setInputValue("");
-  } else if (inputValue.trim() === "3") {
-    clearHomeScreen();
-    if (journalEntries.length > 0) {
-      setOutputAfterRobco("Select entry number to delete:\n");
-      setOutputAfterRobco(
-        journalEntries.map((entry, index) => `${index + 1}. ${entry}`).join("\n")
-      );
-    } else {
-      setOutputAfterRobco("No entries found.\n");
+  };
+
+  const handleInputSubmit = (event) => {
+    event.preventDefault();
+    if (inputValue.trim()) {
+      setInputHistory([...inputHistory, inputValue.trim()]);
+      setHistoryIndex(-1);
+    }
+
+    if (inputValue.trim() === "help") {
+      clearHomeScreen();
+      setOutputAfterRobco(`
+Available commands:
+- start: Start the terminal
+- back: Return to main menu
+- help: Show this help message
+- clear: Clear the screen
+- 1: View Journal Entries
+- 2: Log a Journal Entry
+- 3: Delete last Journal Entry
+`);
       setShowInput(true);
       setInputValue("");
-      
-      
+    } else if (inputValue.trim() === "clear") {
+      clearHomeScreen();
+      setOutputAfterRobco("");
+      setShowInput(true);
+      setInputValue("");
+    } else if (inputValue.trim() === "start" || inputValue.trim() === "back") {
+      setOutputAfterRobco("");
+      setShowRobcoAscii(false);
+      setShowRobcoSystemMessage(true);
+      setInputValue("");
+    } else if (inputValue.trim() === "1") {
+      clearHomeScreen();
+      if (journalEntries.length > 0) {
+        setOutputAfterRobco("Select entry number to view:\n");
+        setOutputAfterRobco(
+          journalEntries.map((entry, index) => 
+            `${index + 1}. [${entry.timestamp}] ${entry.content}`
+          ).join("\n")
+        );
+        setShowInput(true);
+      } else {
+        setOutputAfterRobco("No entries found.\n");
+      }
+      setShowInput(true);
+      setLoggingMode(false);
+      setInputValue("");
+    } else if (inputValue.trim() === "2") {
+      clearHomeScreen();
+      setOutputAfterRobco(LogJournalEntries);
+      setShowInput(true);
+      setLoggingMode(true);
+      setInputValue("");
+    } else if (inputValue.trim() === "3") {
+      clearHomeScreen();
+      if (journalEntries.length > 0) {
+        setOutputAfterRobco("Select entry number to delete:\n");
+        setOutputAfterRobco(
+          journalEntries.map((entry, index) => 
+            `${index + 1}. [${entry.timestamp}] ${entry.content}`
+          ).join("\n")
+        );
+      } else {
+        setOutputAfterRobco("No entries found.\n");
+        setShowInput(true);
+        setInputValue("");
+      }
+      setInputValue("");
+    } else if (inputValue.trim().startsWith("delete ")) {
+      const entryIndex = parseInt(inputValue.trim().substring(7), 10) - 1;
+      handleDeleteEntry(entryIndex);
+      setShowInput(true);
+      setInputValue("");
+    } else if (loggingMode) {
+      const timestamp = new Date().toLocaleString();
+      const newEntry = {
+        content: inputValue,
+        timestamp: timestamp
+      };
+      setJournalEntries([...journalEntries, newEntry]);
+      localStorage.setItem("journalEntries", JSON.stringify([...journalEntries, newEntry]));
+      clearHomeScreen();
+      setOutputAfterRobco(`Entry logged at ${timestamp}, you can now go back.\n`);
+      setShowInput(true);
+      setInputValue("");
+    } else {
+      setOutputAfterRobco(
+        (prevOutput) => prevOutput + `Command '${inputValue}' not recognized.\n`
+      );
+      setInputValue("");
     }
-    setInputValue("");
-  } else if (inputValue.trim().startsWith("delete ")) {
-    const entryIndex = parseInt(inputValue.trim().substring(7), 10) - 1;
-    handleDeleteEntry(entryIndex);
-    setShowInput(true);
-    setInputValue("");
-  } else if (loggingMode) {
-    setJournalEntries([...journalEntries, inputValue]);
-    localStorage.setItem("journalEntries", JSON.stringify(journalEntries));
-    clearHomeScreen();
-    setOutputAfterRobco("Entry logged, you can now go back.\n");
-    setShowInput(true);
-    setInputValue("");
-  } else {
-    setOutputAfterRobco(
-      (prevOutput) => prevOutput + `Command '${inputValue}' not recognized.\n`
-    );
-    setInputValue("");
-  }
-};
+  };
 
   const handleDeleteEntry = (entryIndex) => {
     if (entryIndex >= 0 && entryIndex < journalEntries.length) {
@@ -175,7 +235,7 @@ const Terminal = () => {
     if (entryIndex >= 0 && entryIndex < journalEntries.length) {
       clearHomeScreen();
       setOutputAfterRobco(
-        `Entry ${entryIndex + 1}:\n${journalEntries[entryIndex]}\n`
+        `Entry ${entryIndex + 1}:\n[${journalEntries[entryIndex].timestamp}]\n${journalEntries[entryIndex].content}\n`
       );
     } else {
       setOutputAfterRobco("Invalid entry number.\n");
@@ -210,6 +270,7 @@ const Terminal = () => {
               type="text"
               value={inputValue}
               onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
               className="input"
               style={{
                 background: "transparent",

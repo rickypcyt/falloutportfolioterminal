@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom'; // Importa BrowserRouter desde React Router
-import terminalImage from './bg3nobgblsc.png'; // Importa la imagen aquí
+import terminalImage from './images/bg3nobgblsc.png'; // Importa la imagen aquí
 import Terminal from './terminal';
 
 const App = () => {
